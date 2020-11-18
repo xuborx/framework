@@ -1,1 +1,19 @@
-xuborx-framework
+### Xuborx Framework
+**Framework Description:** This framework is designed to create blogs, online stores and other systems and websites in the language of PHP.  The framework core files are located in the directory *vendor/xuborx/framework/core*.  You can develop the web application in the directory **app** (models, views, controllers) and configure in the directory **config**.
+Twig is used as a template engine. You can work with the database through the methods of the parent model or using the built-in library RedBeanPHP (official site: https://redbeanphp.com/).
+As of today, the framework is terribly underdeveloped and should not be taken seriously at the moment. :smile:
+
+------------
+
+
+**Installation**
+
+You need to clone this repository to your computer, and then enter the command **composer install** to install all the necessary dependencies.
+
+------------
+
+
+**Dependencies currently in use:**
+- PHP (version 7.4 and upper)
+- twig/twig (version 3.1 and upper)
+- gabordemooij/redbean (version 5.6 and upper)

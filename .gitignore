@@ -1,0 +1,8 @@
+.idea/
+app/controllers/TestController.php
+app/models/PostModel.php
+vendor/composer/
+vendor/gabordemooij/
+vendor/symfony/
+vendor/twig/
+vendor/autoload.php

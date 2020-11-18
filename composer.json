@@ -1,0 +1,29 @@
+{
+    "name": "xuborx/framework",
+    "description": "The Xuborx Framework",
+    "type": "project",
+    "keywords": ["framework", "xuborx"],
+    "license": ["MIT"],
+    "authors": [
+            {
+            "name": "Denis Korkh",
+            "email": "deniskorh@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "twig/twig": "^3.1",
+        "gabordemooij/redbean": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Controllers\\": "app/controllers",
+            "App\\Models\\": "app/models",
+            "App\\Statics\\": "app/statics",
+            "Xuborx\\Framework\\": "vendor/xuborx/framework/core",
+            "Xuborx\\Framework\\Base\\Controllers\\": "vendor/xuborx/framework/core/base/controllers",
+            "Xuborx\\Framework\\Base\\Models\\": "vendor/xuborx/framework/core/base/models",
+            "Xuborx\\Framework\\Traits\\": "vendor/xuborx/framework/core/traits"
+        }
+    }
+}
