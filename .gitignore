@@ -6,3 +6,5 @@ vendor/gabordemooij/
 vendor/symfony/
 vendor/twig/
 vendor/autoload.php
+log/exceptions.log
+config/routes.php

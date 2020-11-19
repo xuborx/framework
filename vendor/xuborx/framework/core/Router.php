@@ -2,7 +2,7 @@
 
 namespace Xuborx\Framework;
 
-use Xuborx\Framework\Base\Models\Model;
+use Xuborx\Framework\Request;
 
 class Router
 {
@@ -27,6 +27,7 @@ class Router
     }
 
     public static function routeHandler($route, $queryType) {
+        $route = Request::removeRequestParametersFromRoute($route);
         if (self::searchRoute($route, $queryType)) {
             $controller = '\App\Controllers\\' . self::$route['prefix'] . '\\' . self::$route['controller'];
             $controller = str_replace('\\\\', '\\', $controller);
@@ -35,7 +36,7 @@ class Router
                 $action = self::$route['action'];
                 if (method_exists($controllerObject, $action)) {
                     self::runStatics();
-                    $controllerObject->$action();
+                    $controllerObject->$action(Request::getParameters());
                 } else {
                     throw new \Exception("Action $controller::$action not found", 500);
                 }
