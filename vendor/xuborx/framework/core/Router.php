@@ -10,15 +10,16 @@ class Router
     private static $route = [];
     private static $routes = [];
 
-    public static function addRoute($type = 'GET', $prefix = '', $route = '', $controller = '', $action = '') {
+    public static function addRoute($type = 'GET', $prefix = '', $route = '', $controller = '', $action = '', $inspector = '') {
         $type = strtoupper($type);
         $route = trim($route, '/');
-        $prefix = ucfirst(trim($prefix, '/'));
+        $prefix = trim($prefix, '/');
         self::$routes[$route] = array(
             'type' => $type,
             'prefix' => $prefix,
             'controller' => $controller,
-            'action' => $action
+            'action' => $action,
+            'inspector' => $inspector
         );
     }
 
@@ -29,21 +30,24 @@ class Router
     public static function routeHandler($route, $queryType) {
         $route = Request::removeRequestParametersFromRoute($route);
         if (self::searchRoute($route, $queryType)) {
-            $controller = '\App\Controllers\\' . self::$route['prefix'] . '\\' . self::$route['controller'];
-            $controller = str_replace('\\\\', '\\', $controller);
-            if (class_exists($controller)) {
-                $controllerObject = new $controller(self::$route);
-                $action = self::$route['action'];
-                if (method_exists($controllerObject, $action)) {
-                    self::runStatics();
-                    $controllerObject->$action(Request::getParameters());
+            if (Inspector::inspect(self::$route['inspector'])) {
+                $controller = '\App\Controllers\\' . self::$route['prefix'] . '\\' . self::$route['controller'];
+                $controller = str_replace('\\\\', '\\', $controller);
+                if (class_exists($controller)) {
+                    $controllerObject = new $controller(self::$route);
+                    $action = self::$route['action'];
+                    if (method_exists($controllerObject, $action)) {
+                        self::runStatics();
+                        $controllerObject->$action(Request::getParameters());
+                    } else {
+                        throw new \Exception("Action $controller::$action not found", 500);
+                    }
                 } else {
-                    throw new \Exception("Action $controller::$action not found", 500);
+                    throw new \Exception("Controller $controller not found", 500);
                 }
             } else {
-                throw new \Exception("Controller $controller not found", 500);
+                throw new \Exception('Access denied', 403);
             }
-
         } else {
             throw new \Exception('Page not found', 404);
         }
@@ -57,6 +61,7 @@ class Router
                 self::$route['prefix'] = self::$routes[$route]['prefix'];
                 self::$route['controller'] = self::$routes[$route]['controller'];
                 self::$route['action'] = self::$routes[$route]['action'];
+                self::$route['inspector'] = self::$routes[$route]['inspector'];
                 return true;
             } else {
                 throw new \Exception('Controller and/or action not specified for the route ' . $route, 500);

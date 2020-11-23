@@ -20,6 +20,7 @@
             "App\\Controllers\\": "app/controllers",
             "App\\Models\\": "app/models",
             "App\\Statics\\": "app/statics",
+            "App\\Inspectors\\": "app/inspectors",
             "Xuborx\\Framework\\": "vendor/xuborx/framework/core",
             "Xuborx\\Framework\\Base\\Controllers\\": "vendor/xuborx/framework/core/base/controllers",
             "Xuborx\\Framework\\Base\\Models\\": "vendor/xuborx/framework/core/base/models",

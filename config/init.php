@@ -8,6 +8,7 @@ define("PUBLIC_DIR", ROOT_DIR . "/public");
 define("CONF_DIR", ROOT_DIR . "/config");
 define("VIEW_DIR", APP_DIR . "/views");
 define("STATICS_DIR", APP_DIR . "/statics");
+define("INSPECTORS_DIR", APP_DIR . "/inspectors");
 define("CORE_DIR", ROOT_DIR . "/vendor/xuborx/framework/core");
 
 $appPath = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['PHP_SELF']}";
