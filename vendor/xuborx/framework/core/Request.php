@@ -20,7 +20,7 @@ class Request
     }
 
     public static function removeRequestParametersFromRoute($route) {
-        $parameters = $_GET;
+        $parameters = array_merge($_GET, $_POST);
         array_shift($parameters);
         foreach ($parameters as $key => $value) {
             self::setParameter($key, $value);
