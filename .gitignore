@@ -1,6 +1,6 @@
 .idea/
-app/controllers/TestController.php
-app/models/PostModel.php
+app/Controllers/TestController.php
+app/Models/PostModel.php
 vendor/composer/
 vendor/gabordemooij/
 vendor/symfony/
