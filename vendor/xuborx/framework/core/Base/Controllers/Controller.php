@@ -2,6 +2,7 @@
 
 namespace Xuborx\Framework\Base\Controllers;
 
+use Xuborx\Framework\Routing\Route;
 use Xuborx\Framework\Traits\TwigLoaderTrait;
 
 class Controller
@@ -11,7 +12,7 @@ class Controller
 
     private $route;
 
-    public function __construct($route) {
+    public function __construct(Route $route) {
         $this->route = $route;
     }
 

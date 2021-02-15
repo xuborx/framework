@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Xuborx\Framework;
 
@@ -19,16 +20,17 @@ class Request
         return self::$requestPararmeters;
     }
 
-    public static function removeRequestParametersFromRoute($route) {
+    public static function removeRequestParametersFromQuery(string $query): string
+    {
         $parameters = array_merge($_GET, $_POST);
         array_shift($parameters);
         foreach ($parameters as $key => $value) {
             self::setParameter($key, $value);
         }
         if (!empty($parameters)) {
-            $route = trim(substr($route, 0, strpos($route, '&')), '/');
+            $query = trim(substr($query, 0, strpos($query, '&')), '/');
         }
-        return $route;
+        return $query;
     }
 
 }

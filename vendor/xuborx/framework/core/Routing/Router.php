@@ -1,41 +1,53 @@
 <?php
+declare(strict_types=1);
 
-namespace Xuborx\Framework;
+namespace Xuborx\Framework\Routing;
 
 use Xuborx\Framework\Request;
+use Xuborx\Framework\Inspector;
+use Xuborx\Framework\Registry;
 
 class Router
 {
 
-    private static $route = [];
-    private static $routes = [];
+    private static Route $route;
+    private static array $routes = [];
 
-    public static function addRoute($type = 'GET', $prefix = '', $route = '', $controller = '', $action = '', $inspector = '') {
-        $type = strtoupper($type);
-        $route = trim($route, '/');
-        $prefix = trim($prefix, '/');
-        self::$routes[$route] = array(
-            'type' => $type,
-            'prefix' => $prefix,
-            'controller' => $controller,
-            'action' => $action,
-            'inspector' => $inspector
-        );
+    public function __construct($query, $queryType)
+    {
+        $this->routeHandler($query, $queryType);
     }
 
-    public static function getRoutes() {
+    public static function addRoute
+    (
+        string $type = 'GET',
+        string $prefix = '',
+        string $query = '',
+        string $controller = '',
+        string $action = '',
+        string $inspector = ''
+    ) {
+        $type = strtoupper($type);
+        $query = trim($query, '/');
+        $prefix = trim($prefix, '/');
+        self::$routes[$query] = new Route($type, $prefix, $query, $controller, $action, $inspector);
+    }
+
+    public function getRoutes(): array
+    {
         return self::$routes;
     }
 
-    public static function routeHandler($route, $queryType) {
-        $route = Request::removeRequestParametersFromRoute($route);
-        if (self::searchRoute($route, $queryType)) {
-            if (Inspector::inspect(self::$route['inspector'])) {
-                $controller = '\App\Controllers\\' . self::$route['prefix'] . '\\' . self::$route['controller'];
+    private function routeHandler(string $query, string $queryType): void
+    {
+        $query = Request::removeRequestParametersFromQuery($query);
+        if (self::searchRoute($query, $queryType)) {
+            if (Inspector::inspect(self::$route->getInscpector())) {
+                $controller = '\App\Controllers\\' . self::$route->getPrefix() . '\\' . self::$route->getController();
                 $controller = str_replace('\\\\', '\\', $controller);
                 if (class_exists($controller)) {
                     $controllerObject = new $controller(self::$route);
-                    $action = self::$route['action'];
+                    $action = self::$route->getAction();
                     if (method_exists($controllerObject, $action)) {
                         self::runStatics();
                         $controllerObject->$action(Request::getParameters());
@@ -53,15 +65,11 @@ class Router
         }
     }
 
-    private static function searchRoute($route, $queryType) {
-        if (isset(self::$routes[$route]) && !empty(self::$routes[$route]) && self::$routes[$route]['type'] == $queryType) {
-            if (!empty(self::$routes[$route]['controller']) && !empty(self::$routes[$route]['action'])) {
-                self::$route['route'] = $route;
-                self::$route['type'] = $queryType;
-                self::$route['prefix'] = self::$routes[$route]['prefix'];
-                self::$route['controller'] = self::$routes[$route]['controller'];
-                self::$route['action'] = self::$routes[$route]['action'];
-                self::$route['inspector'] = self::$routes[$route]['inspector'];
+    private static function searchRoute(string $query, string $queryType): bool
+    {
+        if (isset(self::$routes[$query]) && self::$routes[$query]->getType() == $queryType) {
+            if (self::$routes[$query]->getController() !== '' && self::$routes[$query]->getAction() !== '') {
+                self::$route = self::$routes[$query];
                 return true;
             } else {
                 throw new \Exception('Controller and/or action not specified for the route ' . $route, 500);
@@ -71,7 +79,8 @@ class Router
         }
     }
 
-    private static function runStatics() {
+    private static function runStatics(): void
+    {
         $statics = glob(STATICS_DIR. '/*Static.php');
         $registry = Registry::instance();
         foreach ($statics as $static) {
